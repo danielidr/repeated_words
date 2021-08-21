@@ -1,25 +1,38 @@
 getLetters();
-
+getWords();
 function getLetters() {
-    let lorem = document.getElementById("texto-entrada").textContent;
+    let lorem = document.getElementById("texto-entrada").textContent.toLowerCase();
     // Recorre desde el 97 al 122 que son los codigos ascii desde a hasta z
-    for (i = 97 ; i <= 122; i++) {
+    for (i = 97; i <= 122; i++) {
         let letter = String.fromCharCode(i);
-        let regex = `(${letter}|${letter.toUpperCase()})`
-        let ocurrences = lorem.replace(new RegExp(`[^${regex}]`,'g'),'').length;
+        let occurrences = lorem.replace(new RegExp(`[^${letter}]`,'g'),'').length;
 
-        let letters_p = document.createElement("p");
-        document.getElementsByTagName('div')[0].appendChild(letters_p);
-
-        let letters_strong = document.createElement("strong");
-        let text_letter = document.createTextNode(`${letter}:`);
-        letters_strong.appendChild(text_letter);
-        document.getElementsByTagName('p')[1].appendChild(letters_strong);
-
-        let letters_span = document.createElement("span");
-        let text_cant = document.createTextNode(`${ocurrences}  `);
-        letters_span.appendChild(text_cant);
-        document.getElementsByTagName('p')[1].appendChild(letters_span);
+        getToDom(letter,occurrences,1);
     }
 }
 
+function getWords() {
+    let lorem = document.getElementById("texto-entrada").textContent.replace(/[^\w\s]/gi, ' ').replace(/\\n/g,"").toLowerCase();
+    let words =  Array.from(new Set(lorem.split(" ")));
+
+    for(i = 0; i < words.length; i++) {
+        let word = words[i];
+        let occurrences = lorem.split(word).length - 1;
+        getToDom(word, occurrences,2);
+    }
+}
+
+function getToDom(item,occurrences,p) {
+    let add_p = document.createElement("p");
+    document.getElementsByTagName('div')[0].appendChild(add_p);
+
+    let add_strong = document.createElement("strong");
+    let add_text = document.createTextNode(`${item}:`);
+    add_strong.appendChild(add_text);
+    document.getElementsByTagName('p')[p].appendChild(add_strong);
+
+    let add_span = document.createElement("span");
+    let text_cant = document.createTextNode(`${occurrences} `);
+    add_span.appendChild(text_cant);
+    document.getElementsByTagName('p')[p].appendChild(add_span);
+}
